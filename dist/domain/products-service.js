@@ -17,4 +17,9 @@ exports.productsService = {
             return yield products_db_reposetory_1.productsRepository.getProductCards();
         });
     },
+    getProductById(productId) {
+        return __awaiter(this, void 0, void 0, function* () {
+            return yield products_db_reposetory_1.productsRepository.getProductById(productId);
+        });
+    },
 };

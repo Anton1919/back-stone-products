@@ -19,6 +19,7 @@ exports.productCardsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void
         const preparedProducts = foundProducts.map((product) => (Object.assign(Object.assign({}, product), { 
             // @ts-ignore
             images: product.images.map((image) => ({
+                id: image.id,
                 data: image.data.toString('base64'),
                 contentType: image.contentType,
             })) })));
@@ -27,5 +28,15 @@ exports.productCardsRouter.get('/', (req, res) => __awaiter(void 0, void 0, void
     catch (e) {
         console.error(e);
         res.status(500).json({ error: 'Внутренняя ошибка сервера' });
+    }
+}));
+exports.productCardsRouter.get('/:id', (req, res) => __awaiter(void 0, void 0, void 0, function* () {
+    const productId = req.params.id;
+    const product = yield products_service_1.productsService.getProductById(productId);
+    if (product) {
+        res.send(product);
+    }
+    else {
+        res.sendStatus(404);
     }
 }));

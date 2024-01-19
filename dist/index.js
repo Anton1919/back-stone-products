@@ -29,7 +29,7 @@ const corsOptions = {
 // middlewares
 app.use((0, cors_1.default)(corsOptions));
 app.use(jsonBodyParser);
-app.use('/', product_cards_route_1.productCardsRouter);
+app.use('/products', product_cards_route_1.productCardsRouter);
 const startApp = () => __awaiter(void 0, void 0, void 0, function* () {
     yield (0, db_1.runDb)();
     app.listen(PORT, () => {
