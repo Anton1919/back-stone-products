@@ -7,6 +7,10 @@ export const productsService = {
         return await productsRepository.getProductCards();
     },
 
+    async getProductByName(name: string | undefined): Promise<WithId<ProductType[]>[]> {
+        return await productsRepository.getProductByName(name);
+    },
+
     async getProductById(productId: string): Promise<WithId<ProductType[]> | null> {
         return await productsRepository.getProductById(productId);
     },

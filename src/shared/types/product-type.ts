@@ -1,7 +1,7 @@
 export type ProductType = {
     id: string;
     mainImage: string;
-    images: string[];
+    images: { id: string; image: string }[];
     name: string;
     price: string;
     modelNumber: string;
