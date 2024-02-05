@@ -11,6 +11,7 @@ export async function getProductByFilter(
     const filter = filterProductType ? filterProductType : {};
     const sortOptions: Record<string, any> = {};
     sortOptions['price'] = sortBy === 'desc' ? -1 : 1;
+
     return productCollection
         .find(filter)
         .sort(sortOptions)
