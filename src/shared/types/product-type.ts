@@ -15,3 +15,9 @@ export type ProductType = {
     description: string;
     rating: number;
 };
+
+export type FilterType = {
+    pageNum: number;
+    pageSize: number;
+    sortBy: 'asc' | 'desc';
+};
