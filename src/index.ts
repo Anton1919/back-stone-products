@@ -21,7 +21,7 @@ const corsOptions = {
 // middlewares
 app.use(cors(corsOptions));
 app.use(jsonBodyParser);
-app.use('/products', productCardsRouter);
+app.use('/', productCardsRouter);
 
 const startApp = async () => {
     await runDb();

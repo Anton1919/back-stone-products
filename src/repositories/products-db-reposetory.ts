@@ -1,6 +1,7 @@
 import { productCollection } from './db';
 import { WithId } from 'mongodb';
 import { FilterType, ProductType } from '../shared/types/product-type';
+import { getProductByFilter } from '../shared/helpers/getProductByFilter';
 
 export const productsRepository = {
     async getProductCards({
@@ -8,14 +9,7 @@ export const productsRepository = {
         pageSize,
         sortBy,
     }: FilterType): Promise<WithId<ProductType[]>[]> {
-        const sortOptions: Record<string, any> = {};
-        sortOptions['price'] = sortBy === 'desc' ? -1 : 1;
-        return await productCollection
-            .find({})
-            .sort(sortOptions)
-            .skip((pageNum - 1) * pageSize)
-            .limit(pageSize)
-            .toArray();
+        return await getProductByFilter(sortBy, pageNum, pageSize);
     },
 
     async getProductByName(
@@ -29,11 +23,7 @@ export const productsRepository = {
             filter.name = { $regex: name, $options: 'i' };
         }
 
-        return productCollection
-            .find(filter)
-            .skip((pageNum - 1) * pageSize)
-            .limit(pageSize)
-            .toArray();
+        return await getProductByFilter('desc', pageNum, pageSize, filter);
     },
 
     async getProductById(productId: string): Promise<WithId<ProductType[]> | null> {
@@ -45,15 +35,9 @@ export const productsRepository = {
         pageSize,
         sortBy,
     }: FilterType): Promise<WithId<ProductType[]>[]> {
-        const marbleFilter = { 'characteristics.productType': 'Marble' };
-        const sortOptions: Record<string, any> = {};
-        sortOptions['price'] = sortBy === 'desc' ? -1 : 1;
-        return productCollection
-            .find(marbleFilter)
-            .sort(sortOptions)
-            .skip((pageNum - 1) * pageSize)
-            .limit(pageSize)
-            .toArray();
+        return await getProductByFilter(sortBy, pageNum, pageSize, {
+            'characteristics.productType': 'Marble',
+        });
     },
 
     async getMarbleBathProducts({
@@ -61,15 +45,9 @@ export const productsRepository = {
         pageSize,
         sortBy,
     }: FilterType): Promise<WithId<ProductType[]>[]> {
-        const marbleFilter = { 'characteristics.stoneType': 'Bath' };
-        const sortOptions: Record<string, any> = {};
-        sortOptions['price'] = sortBy === 'desc' ? -1 : 1;
-        return productCollection
-            .find(marbleFilter)
-            .sort(sortOptions)
-            .skip((pageNum - 1) * pageSize)
-            .limit(pageSize)
-            .toArray();
+        return await getProductByFilter(sortBy, pageNum, pageSize, {
+            'characteristics.stoneType': 'Bath',
+        });
     },
 
     async getMarbleSlabProducts({
@@ -77,15 +55,9 @@ export const productsRepository = {
         pageSize,
         sortBy,
     }: FilterType): Promise<WithId<ProductType[]>[]> {
-        const marbleFilter = { 'characteristics.stoneType': 'Slab' };
-        const sortOptions: Record<string, any> = {};
-        sortOptions['price'] = sortBy === 'desc' ? -1 : 1;
-        return productCollection
-            .find(marbleFilter)
-            .sort(sortOptions)
-            .skip((pageNum - 1) * pageSize)
-            .limit(pageSize)
-            .toArray();
+        return await getProductByFilter(sortBy, pageNum, pageSize, {
+            'characteristics.stoneType': 'Slab',
+        });
     },
 
     async getGraniteProducts({
@@ -93,15 +65,9 @@ export const productsRepository = {
         pageSize,
         sortBy,
     }: FilterType): Promise<WithId<ProductType[]>[]> {
-        const marbleFilter = { 'characteristics.productType': 'Granite' };
-        const sortOptions: Record<string, any> = {};
-        sortOptions['price'] = sortBy === 'desc' ? -1 : 1;
-        return productCollection
-            .find(marbleFilter)
-            .sort(sortOptions)
-            .skip((pageNum - 1) * pageSize)
-            .limit(pageSize)
-            .toArray();
+        return await getProductByFilter(sortBy, pageNum, pageSize, {
+            'characteristics.productType': 'Granite',
+        });
     },
 
     async getGraniteBarCounterProducts({
@@ -109,15 +75,9 @@ export const productsRepository = {
         pageSize,
         sortBy,
     }: FilterType): Promise<WithId<ProductType[]>[]> {
-        const marbleFilter = { 'characteristics.stoneType': 'Bar' };
-        const sortOptions: Record<string, any> = {};
-        sortOptions['price'] = sortBy === 'desc' ? -1 : 1;
-        return productCollection
-            .find(marbleFilter)
-            .sort(sortOptions)
-            .skip((pageNum - 1) * pageSize)
-            .limit(pageSize)
-            .toArray();
+        return await getProductByFilter(sortBy, pageNum, pageSize, {
+            'characteristics.stoneType': 'Bar',
+        });
     },
 
     async getGraniteTableTopProducts({
@@ -125,15 +85,9 @@ export const productsRepository = {
         pageSize,
         sortBy,
     }: FilterType): Promise<WithId<ProductType[]>[]> {
-        const marbleFilter = { 'characteristics.stoneType': 'Table' };
-        const sortOptions: Record<string, any> = {};
-        sortOptions['price'] = sortBy === 'desc' ? -1 : 1;
-        return productCollection
-            .find(marbleFilter)
-            .sort(sortOptions)
-            .skip((pageNum - 1) * pageSize)
-            .limit(pageSize)
-            .toArray();
+        return await getProductByFilter(sortBy, pageNum, pageSize, {
+            'characteristics.stoneType': 'Table',
+        });
     },
 
     async getWildStoneProducts({
@@ -141,15 +95,9 @@ export const productsRepository = {
         pageSize,
         sortBy,
     }: FilterType): Promise<WithId<ProductType[]>[]> {
-        const marbleFilter = { 'characteristics.productType': 'Wild stone' };
-        const sortOptions: Record<string, any> = {};
-        sortOptions['price'] = sortBy === 'desc' ? -1 : 1;
-        return productCollection
-            .find(marbleFilter)
-            .sort(sortOptions)
-            .skip((pageNum - 1) * pageSize)
-            .limit(pageSize)
-            .toArray();
+        return await getProductByFilter(sortBy, pageNum, pageSize, {
+            'characteristics.productType': 'Wild stone',
+        });
     },
 
     async getWildStoneMasonryProducts({
@@ -157,15 +105,9 @@ export const productsRepository = {
         pageSize,
         sortBy,
     }: FilterType): Promise<WithId<ProductType[]>[]> {
-        const marbleFilter = { 'characteristics.stoneType': 'Masonry' };
-        const sortOptions: Record<string, any> = {};
-        sortOptions['price'] = sortBy === 'desc' ? -1 : 1;
-        return productCollection
-            .find(marbleFilter)
-            .sort(sortOptions)
-            .skip((pageNum - 1) * pageSize)
-            .limit(pageSize)
-            .toArray();
+        return await getProductByFilter(sortBy, pageNum, pageSize, {
+            'characteristics.stoneType': 'Masonry',
+        });
     },
 
     async getWildStoneRubbleProducts({
@@ -173,14 +115,8 @@ export const productsRepository = {
         pageSize,
         sortBy,
     }: FilterType): Promise<WithId<ProductType[]>[]> {
-        const marbleFilter = { 'characteristics.stoneType': 'Rubble' };
-        const sortOptions: Record<string, any> = {};
-        sortOptions['price'] = sortBy === 'desc' ? -1 : 1;
-        return productCollection
-            .find(marbleFilter)
-            .sort(sortOptions)
-            .skip((pageNum - 1) * pageSize)
-            .limit(pageSize)
-            .toArray();
+        return await getProductByFilter(sortBy, pageNum, pageSize, {
+            'characteristics.stoneType': 'Rubble',
+        });
     },
 };
