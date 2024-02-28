@@ -5,6 +5,7 @@ import { mailService } from './mail-service';
 import { ModelUserType, UserDto } from './user-dto';
 import { tokenService } from './token-service';
 import { config } from 'dotenv';
+import { ApiError } from '../exceptions/api-error';
 
 config();
 
@@ -12,7 +13,7 @@ class UserService {
     async registration(email: string, password: string) {
         const candidate = await UserModel.findOne({ email }); // ищем есть ли такой пользователь
         if (candidate) {
-            throw new Error(`Пользователь с почтовым адресом %{email} уже существует !`);
+            throw ApiError.BadRequest(`Пользователь с почтовым адресом ${email} уже существует !`);
         }
         const hashPassword = await bcrypt.hash(password, 3); // хешируем настоящий пароль в рандомную строку для Базы Данных
         const activationLink = uuidv4(); // создаем уникальную строку для активации почты
@@ -36,10 +37,31 @@ class UserService {
     async activate(activationLink: string) {
         const user = await UserModel.findOne({ activationLink });
         if (!user) {
-            throw new Error('Некорректная ссылка !');
+            throw ApiError.BadRequest('Некорректная ссылка !');
         }
         user.isActivated = true;
         await user.save();
+    }
+
+    async login(email: string, password: string) {
+        const user = await UserModel.findOne({ email });
+
+        if (!user) {
+            throw ApiError.BadRequest('Пользователь с таким email не найден');
+        }
+        const isPassEquals = await bcrypt.compare(password, user.password);
+        if (!isPassEquals) {
+            throw ApiError.BadRequest('Неверный пароль');
+        }
+
+        const userDto = new UserDto(user as ModelUserType); // id, email, isActivated
+        const tokens = tokenService.generateTokens({ ...userDto });
+        await tokenService.saveToken(userDto.id, tokens.refreshToken);
+
+        return {
+            ...tokens,
+            user: userDto,
+        };
     }
 }
 

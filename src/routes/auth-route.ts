@@ -1,9 +1,15 @@
 import { Request, Response, Router } from 'express';
 import { userController } from '../domain/users-controller';
+import { body } from 'express-validator';
 
 export const authRouter = Router({});
 
-authRouter.post('/registration', userController.registration);
+authRouter.post(
+    '/registration',
+    body('email').isEmail(),
+    body('password').isLength({ min: 3, max: 32 }),
+    userController.registration,
+);
 
 authRouter.post('/login', userController.login);
 

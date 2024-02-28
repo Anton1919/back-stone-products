@@ -7,6 +7,7 @@ import cookieParser from 'cookie-parser';
 import { productCardsRouter } from './routes/product-cards-route';
 import { authRouter } from './routes/auth-route';
 import mongoose from 'mongoose';
+import { errorMiddleware } from './middlewares/error-middleware';
 
 config();
 
@@ -27,6 +28,7 @@ app.use(cors(corsOptions));
 app.use(jsonBodyParser);
 app.use('/', productCardsRouter);
 app.use('/api', authRouter);
+app.use(errorMiddleware); // должен быть последним
 
 const startApp = async () => {
     try {
