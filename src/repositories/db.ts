@@ -1,6 +1,6 @@
 import { MongoClient } from 'mongodb';
 import { config } from 'dotenv';
-import { ProductType } from '../shared/types/product-type';
+import { ProductType, UserType } from '../shared/types/product-type';
 
 config();
 

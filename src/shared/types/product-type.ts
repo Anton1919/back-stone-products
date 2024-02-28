@@ -16,6 +16,11 @@ export type ProductType = {
     rating: number;
 };
 
+export type UserType = {
+    email: string;
+    password: string;
+};
+
 export type FilterType = {
     pageNum: number;
     pageSize: number;
