@@ -1,5 +1,8 @@
 import { Request, Response, NextFunction } from 'express';
 import { userService } from './user-service';
+import { config } from 'dotenv';
+
+config();
 
 class UserController {
     async registration(req: Request, res: Response, next: NextFunction) {
@@ -16,6 +19,7 @@ class UserController {
             return res.json(userData);
         } catch (e) {
             console.error(e);
+            return res.json('Ошибка при получении данных, проверьте логи');
         }
     }
 
@@ -32,7 +36,14 @@ class UserController {
 
     async activate(req: Request, res: Response, next: NextFunction) {
         try {
-        } catch (e) {}
+            const activationLink = req.params.link;
+            await userService.activate(activationLink);
+
+            return res.redirect(process.env.CLIENT_URL!); // после активации переводим пользователя на фронтенд
+        } catch (e) {
+            console.error(e);
+            return res.json('Ошибка при активации ссылки, проверьте логи');
+        }
     }
 
     async refresh(req: Request, res: Response, next: NextFunction) {

@@ -4,6 +4,9 @@ import { v4 as uuidv4 } from 'uuid';
 import { mailService } from './mail-service';
 import { ModelUserType, UserDto } from './user-dto';
 import { tokenService } from './token-service';
+import { config } from 'dotenv';
+
+config();
 
 class UserService {
     async registration(email: string, password: string) {
@@ -15,7 +18,10 @@ class UserService {
         const activationLink = uuidv4(); // создаем уникальную строку для активации почты
 
         const user = await UserModel.create({ email, password: hashPassword, activationLink });
-        await mailService.sendActivationMail(email, activationLink); // отправляем на почту ссылку для активаации
+        await mailService.sendActivationMail(
+            email,
+            `${process.env.API_URL}/api/activate/${activationLink}`,
+        ); // отправляем на почту ссылку для активаации
 
         const userDto = new UserDto(user as ModelUserType); // id, email, isActivated
         const tokens = tokenService.generateTokens({ ...userDto });
@@ -25,6 +31,15 @@ class UserService {
             ...tokens,
             user: userDto,
         };
+    }
+
+    async activate(activationLink: string) {
+        const user = await UserModel.findOne({ activationLink });
+        if (!user) {
+            throw new Error('Некорректная ссылка !');
+        }
+        user.isActivated = true;
+        await user.save();
     }
 }
 
