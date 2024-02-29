@@ -1,6 +1,7 @@
 import { Request, Response, Router } from 'express';
 import { userController } from '../domain/users-controller';
 import { body } from 'express-validator';
+import { authMiddleware } from '../middlewares/auth-middleware';
 
 export const authRouter = Router({});
 
@@ -19,4 +20,5 @@ authRouter.get('/activate/:link', userController.activate);
 
 authRouter.get('/refresh', userController.refresh);
 
-authRouter.get('/users', userController.getUsers);
+// ниже выполняем получение пользователей, но это могут делать только авторизованные пользователи благодаря нашему middleware
+authRouter.get('/users', authMiddleware, userController.getUsers);
