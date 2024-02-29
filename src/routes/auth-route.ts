@@ -1,7 +1,7 @@
-import { Request, Response, Router } from 'express';
-import { userController } from '../domain/users-controller';
+import { Router } from 'express';
 import { body } from 'express-validator';
 import { authMiddleware } from '../middlewares/auth-middleware';
+import { userController } from '../repositories/users-controller';
 
 export const authRouter = Router({});
 

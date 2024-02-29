@@ -1,5 +1,5 @@
 import { Request, Response, NextFunction } from 'express';
-import { userService } from './user-service';
+import { userService } from '../domain/user-service';
 import { config } from 'dotenv';
 import { validationResult } from 'express-validator';
 import { ApiError } from '../exceptions/api-error';
